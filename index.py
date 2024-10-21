@@ -31,11 +31,12 @@ def main():
         line.draw(win)
         lines.append(line)
     
+    f = 200  # focal length
     projectionMatrix = [
         [1, 0, 0, 0],
         [0, 1, 0, 0],
-        [0, 0, -1, 0],
-        [0, 0, -1/200, 1]
+        [0, 0, 1, 0],
+        [0, 0, -1/f, 1]
     ]
 
     translateToOriginM = [
@@ -66,42 +67,21 @@ def main():
                 [0, 0, 1, 0],
                 [0, 0, 0, 1]
             ]
-            # rotationYaxisM = [
-            #     [numpy.cos(angle), 0, numpy.sin(angle), 0],
-            #     [0, 1, 0, 0],
-            #     [-numpy.sin(angle), 0, numpy.cos(angle), 0],
-            #     [0, 0, 0, 1]
-            # ]
+            rotationYaxisM = [
+                [numpy.cos(angle), 0, numpy.sin(angle), 0],
+                [0, 1, 0, 0],
+                [-numpy.sin(angle), 0, numpy.cos(angle), 0],
+                [0, 0, 0, 1]
+            ]
             
             originV = numpy.dot(v, translateToOriginM) #translate square to the top left window origin
-            rotateV = numpy.dot(originV, rotationZaxisM) #apply rotation to square 
-            projectV = numpy.dot(rotateV, projectionMatrix)
+            rotateV = numpy.dot(originV, rotationYaxisM) #apply rotation to square 
+            projectV = numpy.dot(rotateV, projectionMatrix) #project onto axis 
             finalV = numpy.dot(projectV, translateToCenterM) #translate back to center of window
 
-            # print('finalV', finalV)
-
-            vertices[i][0] = finalV[0]
-            vertices[i][1] = finalV[1]
-            vertices[i][2] = finalV[2]
-            # vertices[i][0] = finalV[0] / finalV[3]
-            # vertices[i][1] = finalV[1] / finalV[3]
-            # vertices[i][2] = finalV[2] / finalV[3]
-
-    # def project():
-    #     for i in range(len(vertices)):
-    #         x = vertices[i][0]
-    #         y = vertices[i][1]
-    #         z = vertices[i][2]
-    
-    #         v = [x, y, z, 1]
-
-    #         projectV = numpy.dot(v, projectionMatrix)
-
-    #         vertices[i][0] = projectV[0] / -z
-    #         vertices[i][1] = projectV[1] / -z
-    #         vertices[i][2] = projectV[2] / -z
-
-
+            vertices[i][0] = finalV[0] / finalV[3]
+            vertices[i][1] = finalV[1] / finalV[3]
+            vertices[i][2] = finalV[2] / finalV[3]
 
     angle_offset = numpy.pi / 35
     angle = angle_offset
@@ -112,7 +92,6 @@ def main():
             line.undraw()
 
         rotateVertices(angle)
-        # project()
 
         lines = []
         for edge in edges:
@@ -122,6 +101,6 @@ def main():
 
         if win.checkMouse():
             break
-        time.sleep(0.03)
+        time.sleep(0.3)
         
 main()
