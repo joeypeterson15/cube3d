@@ -8,6 +8,7 @@ def main():
     yCenter = yLength / 2
     zCenter = 0
     win = GraphWin("Cube", 400, 400, autoflush=False)
+    win.setBackground("pink") 
     vertices = [
         [xCenter - 20, yCenter + 20, -20],
         [xCenter + 20, yCenter + 20, -20],
@@ -23,6 +24,15 @@ def main():
         (0, 1), (1, 2), (2, 3), (3, 0),
         (4, 5), (5, 6), (6, 7), (7, 4),
         (0, 4), (1, 5), (2, 6), (3, 7)
+    ]
+
+    faces = [
+        (0, 1, 2, 3),
+        (4, 5, 6, 7),
+        (0, 1, 4, 5),
+        (2, 3, 6, 7),
+        (0, 4, 7, 3),
+        (1, 5, 6, 2) 
     ]
 
     lines = []
@@ -73,7 +83,7 @@ def main():
                 [-numpy.sin(angle), 0, numpy.cos(angle), 0],
                 [0, 0, 0, 1]
             ]
-            
+
             originV = numpy.dot(v, translateToOriginM) #translate square to the top left window origin
             rotateV = numpy.dot(originV, rotationYaxisM) #apply rotation to square 
             projectV = numpy.dot(rotateV, projectionMatrix) #project onto axis 
@@ -83,24 +93,80 @@ def main():
             vertices[i][1] = finalV[1] / finalV[3]
             vertices[i][2] = finalV[2] / finalV[3]
 
+    cameraNormVector = [0, 0, -1] 
+    # def getFacingEdges(): # trying out "back-face culling". checking if the norm of the edge
+    #     facingEdges = set(edges)
+
+    #     for edge in edges:
+    #         vertice1 = vertices[edge[0]]
+    #         vertice2 = vertices[edge[1]]
+    #         vector1 = [vertice1[0] - xCenter, vertice1[1] - yCenter, vertice1[2]]
+    #         vector2 = [vertice2[0] - xCenter, vertice2[1] - yCenter, vertice2[2]]
+
+    #         edgeCameraCrossProduct = numpy.cross(vector1, vector2)
+    #         print('edgeCameraCrossProduct:', edgeCameraCrossProduct)
+    #         edgeCameraDot = numpy.dot(edgeCameraCrossProduct, cameraNormVector)
+    #         print('edgeCameraDot:', edgeCameraDot)
+    #         if edgeCameraDot >= 0:
+    #             facingEdges.remove(edge)
+        
+    #     return facingEdges
+    
+
+    def getFaceNormal(face):
+        # Get 3 vertices of the face to define a plane
+        vert1 = numpy.array(vertices[face[0]])
+        vert2 = numpy.array(vertices[face[1]])
+        vert3 = numpy.array(vertices[face[2]])
+        
+        # Calculate two vectors on the face
+        vector1 = vert2 - vert1
+        vector2 = vert3 - vert1
+        
+        # Compute the normal using cross product
+        normal = numpy.cross(vector1, vector2)
+        return normal / numpy.linalg.norm(normal)  # Normalize the normal vector
+
+    def getFacingEdges():
+        facingEdges = set()
+
+        for face in faces:
+            # Get the normal of the face
+            normal = getFaceNormal(face)
+
+            # Dot product of normal and camera direction
+            edgeCameraDot = numpy.dot(normal, cameraNormVector)
+
+            if edgeCameraDot < 0:  # If the face is facing the camera
+                # Add edges of the face to the facing edges set
+                for i in range(len(face)):
+                    edge = (face[i], face[(i+1) % len(face)])  # Create edge pair
+                    if edge not in facingEdges:
+                        facingEdges.add(edge)
+
+        return facingEdges
+    
+
     angle_offset = numpy.pi / 35
     angle = angle_offset
-
     running = True
     while running:
         for line in lines:
             line.undraw()
 
         rotateVertices(angle)
+        # facingEdges = getFacingEdges()
+        facingEdges = getFacingEdges()
 
         lines = []
-        for edge in edges:
+        for edge in facingEdges:
             line = Line(Point(vertices[edge[0]][0], vertices[edge[0]][1]), Point(vertices[edge[1]][0], vertices[edge[1]][1])) #unpack with '*'
-            line.draw(win)
+            line.draw(win).setWidth(2)
+            line.setFill("white")
             lines.append(line)
 
         if win.checkMouse():
             break
-        time.sleep(0.3)
+        time.sleep(0.03)
         
 main()
