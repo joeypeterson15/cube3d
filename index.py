@@ -9,15 +9,17 @@ def main():
     zCenter = 0
     win = GraphWin("Cube", 400, 400, autoflush=False)
     win.setBackground("pink") 
+
     vertices = [
-        [xCenter - 20, yCenter + 20, -20],
-        [xCenter + 20, yCenter + 20, -20],
-        [xCenter + 20, yCenter - 20, -20],
-        [xCenter - 20, yCenter - 20, -20],
+        [xCenter + 20, yCenter - 20, 20],
+        [xCenter - 20, yCenter - 20, 20],
         [xCenter - 20, yCenter + 20, 20],
         [xCenter + 20, yCenter + 20, 20],
-        [xCenter + 20, yCenter - 20, 20],
-        [xCenter - 20, yCenter - 20, 20]
+        [xCenter + 20, yCenter - 20, -20],
+        [xCenter - 20, yCenter - 20, -20],
+        [xCenter - 20, yCenter + 20, -20],
+        [xCenter + 20, yCenter + 20, -20],
+
     ]
 
     edges = [
@@ -104,9 +106,9 @@ def main():
     #         vector2 = [vertice2[0] - xCenter, vertice2[1] - yCenter, vertice2[2]]
 
     #         edgeCameraCrossProduct = numpy.cross(vector1, vector2)
-    #         print('edgeCameraCrossProduct:', edgeCameraCrossProduct)
+    #         # print('edgeCameraCrossProduct:', edgeCameraCrossProduct)
     #         edgeCameraDot = numpy.dot(edgeCameraCrossProduct, cameraNormVector)
-    #         print('edgeCameraDot:', edgeCameraDot)
+    #         # print('edgeCameraDot:', edgeCameraDot)
     #         if edgeCameraDot >= 0:
     #             facingEdges.remove(edge)
         
@@ -157,7 +159,6 @@ def main():
             line.undraw()
 
         rotateVertices(angle)
-        # facingEdges = getFacingEdges()
         facingEdges = getFacingEdges()
 
         lines = []
