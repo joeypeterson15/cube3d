@@ -133,11 +133,13 @@ def main():
         for face in faces:
             # Get the normal of the face
             normal = getFaceNormal(face)
+            # print('normal', normal)
 
             # Dot product of normal and camera direction
             edgeCameraDot = numpy.dot(normal, cameraNormVector)
+            # print('edgeCameraDot')
 
-            if edgeCameraDot < 0:  # If the face is facing the camera
+            if edgeCameraDot > 0:  # If the face is facing the camera
                 # Add edges of the face to the facing edges set
                 for i in range(len(face)):
                     edge = (face[i], face[(i+1) % len(face)])  # Create edge pair
@@ -167,6 +169,6 @@ def main():
 
         if win.checkMouse():
             break
-        time.sleep(0.03)
+        time.sleep(0.05)
         
 main()
