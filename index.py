@@ -79,7 +79,7 @@ def main():
                 [0, 0, 0, 1]
             ]
 
-            yAng = numpy.pi / 75
+            yAng = -numpy.pi / 40
             rotationYM = [
                 [numpy.cos(yAng), 0, numpy.sin(yAng), 0],
                 [0, 1, 0, 0],
@@ -140,7 +140,7 @@ def main():
         normal = numpy.cross(vector1, vector2)
         return normal / numpy.linalg.norm(normal)  # Normalize the normal vector
 
-    def getFacingEdges():
+    def backfaceCulling():
         facingEdges = set()
 
         for face in faces:
@@ -170,13 +170,13 @@ def main():
             line.undraw()
 
         rotateVertices(angle)
-        facingEdges = getFacingEdges()
+        facingEdges = backfaceCulling()
 
         lines = []
         for edge in facingEdges:
             line = Line(Point(vertices[edge[0]][0], vertices[edge[0]][1]), Point(vertices[edge[1]][0], vertices[edge[1]][1])) #unpack with '*'
             line.draw(win).setWidth(2)
-            line.setFill("white")
+            line.setFill("black")
             lines.append(line)
 
         if win.checkMouse():
