@@ -19,7 +19,6 @@ def main():
         [xCenter - 20, yCenter - 20, -20],
         [xCenter - 20, yCenter + 20, -20],
         [xCenter + 20, yCenter + 20, -20],
-
     ]
 
     edges = [
@@ -30,10 +29,10 @@ def main():
 
     faces = [
         (0, 1, 2, 3),
-        (4, 5, 6, 7),
-        (0, 1, 4, 5),
-        (2, 3, 6, 7),
-        (0, 4, 7, 3),
+        (4, 6, 6, 5),
+        (0, 4, 5, 1),
+        (3, 2, 6, 7),
+        (0, 3, 7, 4),
         (1, 5, 6, 2) 
     ]
 
@@ -156,7 +155,7 @@ def main():
             if edgeCameraDot > 0:  # If the face is facing the camera
                 # Add edges of the face to the facing edges set
                 for i in range(len(face)):
-                    edge = (face[i], face[(i+1) % len(face)])  # Create edge pair
+                    edge = (face[i], face[(i+1) % 4])  # Create edge pair
                     if edge not in facingEdges:
                         facingEdges.add(edge)
 
@@ -171,10 +170,10 @@ def main():
             line.undraw()
 
         rotateVertices(angle)
-        # facingEdges = getFacingEdges()
+        facingEdges = getFacingEdges()
 
         lines = []
-        for edge in edges:
+        for edge in facingEdges:
             line = Line(Point(vertices[edge[0]][0], vertices[edge[0]][1]), Point(vertices[edge[1]][0], vertices[edge[1]][1])) #unpack with '*'
             line.draw(win).setWidth(2)
             line.setFill("white")
