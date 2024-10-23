@@ -73,22 +73,34 @@ def main():
 
             v = [lastx, lasty, lastZ, 1]
 
-            rotationZaxisM = [
+            rotationZM = [
                 [numpy.cos(angle), -numpy.sin(angle), 0, 0],
                 [numpy.sin(angle), numpy.cos(angle), 0, 0],
                 [0, 0, 1, 0],
                 [0, 0, 0, 1]
             ]
-            rotationYaxisM = [
-                [numpy.cos(angle), 0, numpy.sin(angle), 0],
+
+            yAng = numpy.pi / 75
+            rotationYM = [
+                [numpy.cos(yAng), 0, numpy.sin(yAng), 0],
                 [0, 1, 0, 0],
-                [-numpy.sin(angle), 0, numpy.cos(angle), 0],
+                [-numpy.sin(yAng), 0, numpy.cos(yAng), 0],
+                [0, 0, 0, 1]
+            ]
+
+            xAng = numpy.pi / 55
+            rotationXM = [
+                [1, 0, 0, 0],
+                [0, numpy.cos(xAng), numpy.sin(xAng), 0],
+                [0, -numpy.sin(xAng), numpy.cos(xAng), 0],
                 [0, 0, 0, 1]
             ]
 
             originV = numpy.dot(v, translateToOriginM) #translate square to the top left window origin
-            rotateV = numpy.dot(originV, rotationYaxisM) #apply rotation to square 
-            projectV = numpy.dot(rotateV, projectionMatrix) #project onto axis 
+            rotateXV = numpy.dot(originV, rotationXM) #apply rotation to square
+            rotateYV = numpy.dot(rotateXV, rotationYM)
+            rotateZV = numpy.dot(rotateYV, rotationZM)
+            projectV = numpy.dot(rotateZV, projectionMatrix) #project onto axis 
             finalV = numpy.dot(projectV, translateToCenterM) #translate back to center of window
 
             vertices[i][0] = finalV[0] / finalV[3]
@@ -151,7 +163,7 @@ def main():
         return facingEdges
     
 
-    angle_offset = numpy.pi / 35
+    angle_offset = numpy.pi / 33
     angle = angle_offset
     running = True
     while running:
@@ -159,10 +171,10 @@ def main():
             line.undraw()
 
         rotateVertices(angle)
-        facingEdges = getFacingEdges()
+        # facingEdges = getFacingEdges()
 
         lines = []
-        for edge in facingEdges:
+        for edge in edges:
             line = Line(Point(vertices[edge[0]][0], vertices[edge[0]][1]), Point(vertices[edge[1]][0], vertices[edge[1]][1])) #unpack with '*'
             line.draw(win).setWidth(2)
             line.setFill("white")
