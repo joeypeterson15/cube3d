@@ -88,7 +88,7 @@ def main():
                 [0, 0, 0, 1]
             ]
 
-            xAng = numpy.pi / 55
+            xAng = numpy.pi / 100
             rotationXM = [
                 [1, 0, 0, 0],
                 [0, numpy.cos(xAng), numpy.sin(xAng), 0],
