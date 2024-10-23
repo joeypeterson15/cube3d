@@ -16,17 +16,18 @@ def main():
     xAng = numpy.pi / 100
     yAng = -numpy.pi / 40
     zAng = numpy.pi / 33
+    l = 70
 
 
     vertices = [
-        [xCenter + 20, yCenter - 20, 20],
-        [xCenter - 20, yCenter - 20, 20],
-        [xCenter - 20, yCenter + 20, 20],
-        [xCenter + 20, yCenter + 20, 20],
-        [xCenter + 20, yCenter - 20, -20],
-        [xCenter - 20, yCenter - 20, -20],
-        [xCenter - 20, yCenter + 20, -20],
-        [xCenter + 20, yCenter + 20, -20],
+        [xCenter + l, yCenter - l, l],
+        [xCenter - l, yCenter - l, l],
+        [xCenter - l, yCenter + l, l],
+        [xCenter + l, yCenter + l, l],
+        [xCenter + l, yCenter - l, -l],
+        [xCenter - l, yCenter - l, -l],
+        [xCenter - l, yCenter + l, -l],
+        [xCenter + l, yCenter + l, -l],
     ]
 
     edges = [
@@ -152,7 +153,7 @@ def main():
         for edge in visibleEdges:
             line = Line(Point(vertices[edge[0]][x], vertices[edge[0]][y]), Point(vertices[edge[1]][x], vertices[edge[1]][y]))
             line.draw(win).setWidth(2)
-            line.setFill("black")
+            line.setFill("red")
             lines.append(line)
 
         if win.checkMouse():
