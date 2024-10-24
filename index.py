@@ -153,7 +153,7 @@ def main():
         for edge in visibleEdges:
             line = Line(Point(vertices[edge[0]][x], vertices[edge[0]][y]), Point(vertices[edge[1]][x], vertices[edge[1]][y]))
             line.draw(win).setWidth(2)
-            line.setFill("red")
+            line.setFill("black")
             lines.append(line)
 
         if win.checkMouse():
