@@ -145,6 +145,13 @@ def main():
     while running:
         for line in lines:
             line.undraw()
+        xAng += numpy.pi / 250
+        yAng += numpy.pi / 250
+        zAng += numpy.pi / 250
+        xAng %= 4 * numpy.pi
+        yAng %= 4 * numpy.pi
+        zAng %= 4 * numpy.pi
+
 
         rotateVertices()
         visibleEdges = backfaceCulling()
